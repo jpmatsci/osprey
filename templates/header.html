@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang='en'>
+<meta> NAME='skynet', CONTENT='blog' </meta>
+<style type="text/css">
+    a {text-decoration: none; }
+    a.nav {color: #0000ff; }
+    h1 { font-family: verdana; font-size: 10pt;}
+    p { font-family: verdana; font-size: 10pt;}
+    li { font-family: verdana; font-size: 10pt;}
+    em { font-family: verdana; font-size: 10pt;}
+    div.photo { float: right; padding: 5; }
+    #home {color: black; font-weight: bold; text-decoration: none; }
+</style>
+<head>
+    <title>
+        {% block title -%}
+        {% endblock -%}
+    </title>
+</head>
+<body>
+    <div id="content" style="margin:30px">{% block content %}{% endblock %}</div>
+</body>
+    <div id="footer" style='font-size:14px'>
+        <center>
+            Osprey version {{ page_data.version }} By J.Puls 2016
+            <br>
+            Contact at or jrpuls@gmail.com
+        </center>
+    </div>
+</html>
