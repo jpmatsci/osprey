@@ -1,6 +1,7 @@
 from flask import Flask, request, session, g, redirect, url_for, send_from_directory, \
      abort, render_template, flash, escape
 from functools import wraps
+from utilites import dotdict
 import os
 
 app = Flask(__name__)
@@ -25,8 +26,12 @@ def login_required(f):
 
 @app.route('/', methods = ['GET'])
 def index()
-    subs = get_subsections()
-    articles = get_articles()
+    page_data = dotdict({})
+    page_data['subs'] = get_subsections()
+    page_data['articles'] = get_articles()
+    page_data['frontpage'] = get_frontpage()
+    if page_data.frontpage = None:
+        return render_template('nothing.html', page_data)
 	return render_template('osprey.html', page_data)
 
 
