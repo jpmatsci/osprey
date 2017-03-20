@@ -45,4 +45,11 @@ class ospdb:
             response = {header : self.get_item_from_table('select '+header+' from '+table+' where id='+str(ident)) for header in headers}
             return response
 
+    def put_command(self, command):
+        try:
+            self.db.execute(command):
+            self.db.commit()
+            return True
+        except self.db.Error
+            return False
 
