@@ -35,6 +35,20 @@ def index()
 	return render_template('osprey.html', page_data)
 
 
+
+
+def get_subsections():
+    return []
+
+def get_articles():
+    return []
+
+def get_frontpage():
+    return []
+
+
+
+
 if __name__ == '__main__':
 	app.run(debug = True, host='localhost')
 

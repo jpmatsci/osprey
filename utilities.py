@@ -18,20 +18,18 @@ class ospdb:
         self.database = database
         self.db = sql.connect(database)
 
-        def openread(self, query):     #generator function for reading lines from a mysql db
-    try:
-        cursor = self.db.cursor()
-        cursor.execute(query)
-        #print query #for debugging                                  
-        newrow = cursor.fetchone()
-        while newrow:
-            yield newrow
+    def openread(self, query):
+        try:
+            cursor = self.db.cursor()
+            cursor.execute(query)
+            #print query #for debugging                                  
             newrow = cursor.fetchone()
-    except mysql.connector.Error as err:
-        print "Something went wrong: ", err.msg
-        print "query was: ", query
-        #return emtpy list for error
-        return []
+            while newrow:
+                yield newrow
+                newrow = cursor.fetchone()
+        except mysql.connector.Error as err:
+            print "Something went wrong: ", err.msg
+            print "query was: ", query
 
     def get_headers(self, table):
         headers = []
@@ -47,9 +45,10 @@ class ospdb:
 
     def put_command(self, command):
         try:
-            self.db.execute(command):
+            self.db.execute(command)
             self.db.commit()
             return True
-        except self.db.Error
+        except self.db.Error as err:
+            print err
             return False
 
