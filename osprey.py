@@ -1,3 +1,15 @@
+'''
+Osprey is a package used to make a basic homepage
+it has a tree based model with only a handfull of generic pages
+The pages are: A top level page(index), a Subsection page,
+    An article page, and an admin/login page for making pages.
+The article pages are written in the admin page using a markup
+language.  I know there are a number of these packages out there
+but I wanted to write one from scratch for the learning experience.
+This is going to be a open source package but is really just for my
+own benifit as a learning experience.
+'''
+
 from flask import Flask, request, session, g, redirect, url_for, send_from_directory, \
      abort, render_template, flash, escape
 from functools import wraps
@@ -33,9 +45,6 @@ def index()
     if page_data.frontpage = None:
         return render_template('nothing.html', page_data)
 	return render_template('osprey.html', page_data)
-
-
-
 
 def get_subsections():
     return []
