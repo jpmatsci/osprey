@@ -17,16 +17,23 @@ caption is listed then one wont be shown.}
 So here is a short list of items
 
 \title{title if different from page title}
+
 \paragraph{content}
+
 \section{section title, 2}
+
 \link{word,href}
+
 \list{x,y,z}
+
 \image{caption, file}
+
 \image{, file}      #for no caption
+
 \\captions are not parsed into the html\\
 
 the number in section is used for the header number i.e.
-\section{section, 3} is <h3>section</h3>
-\title{} is always <h1></h1>
+\section{section, 3} is "<h3>section</h3>"
+\title{} is always "<h1></h1>"
 all <, > or \ at parsing not used in code will produce an error.
 

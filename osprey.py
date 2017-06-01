@@ -36,15 +36,15 @@ def login_required(f):
             return redirect(url_for('login'))
     return wrap
 
-@app.route('/', methods = ['GET'])
-def index()
+@app.route('/', methods = ['GET', 'POST'])
+def index():
     page_data = dotdict({})
     page_data['subs'] = get_subsections()
     page_data['articles'] = get_articles()
-    page_data['frontpage'] = get_frontpage()
-    if page_data.frontpage = None:
-        return render_template('nothing.html', page_data)
-	return render_template('osprey.html', page_data)
+    if request.method == "POST":
+        page_data['text'] = request.form['text']
+    #return render_template('text.html', page_data=page_data)
+    return render_template('csstest.html')
 
 def get_subsections():
     return []
@@ -52,11 +52,8 @@ def get_subsections():
 def get_articles():
     return []
 
-def get_frontpage():
+def get_toppage():
     return []
-
-
-
 
 if __name__ == '__main__':
 	app.run(debug = True, host='localhost')
