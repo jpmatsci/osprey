@@ -1,0 +1,16 @@
+{% extends "header.html" -%}
+{% block content -%}
+<form action='/' method='POST'>
+    <h3>text:</h3> 
+    <textarea width="700px" height="300px" name="text">
+    </textarea>
+    <br>
+    <input type="submit" value="SUBMIT">
+</form>
+<br>
+{% if page_data.text -%}
+    {{ page_data.text|safe -}}
+{% endif -%}
+{% endblock -%}
+{% block script -%}
+{% endblock -%}
