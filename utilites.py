@@ -1,5 +1,11 @@
 import sqlite3 as sql
 
+#This is a small class allowing you to use dots
+#in dictionaries for example:
+#
+# >>> variable['first'] = 1
+# >>> print variable.first
+#     1
 
 class dotdict(dict):
     __getattr__ = dict.__getitem__
@@ -12,13 +18,16 @@ class dotdict(dict):
                 value = DotDict(value)
             self[key] = value
 
+#This is my main sqlite database class
+
 class ospdb:
 
     def __init__(self, database):
         self.database = database
         self.db = sql.connect(database)
 
-    def openread(self, query):
+    def iter_query(self, query):
+    #main query function, also a generator
         try:
             cursor = self.db.cursor()
             cursor.execute(query)
@@ -33,14 +42,13 @@ class ospdb:
 
     def get_headers(self, table):
         headers = []
-        for row in self.openread('DESCRIBE '+table):
-            #row[0] is the header, row[1] is the description
+        for row in self.iter_query('DESCRIBE '+table):
             headers.append(row[0])
         return headers
 
-    def dictrow(self, table, ident):
+    def dictrow(self, table, key):
             headers = self.get_headers(table)
-            response = {header : self.get_item_from_table('select '+header+' from '+table+' where id='+str(ident)) for header in headers}
+            response = {header : self.iter_query('select '+header+' from '+table+' where [PrimaryKey]='+str(key)) for header in headers}
             return response
 
     def put_command(self, command):
@@ -51,4 +59,3 @@ class ospdb:
         except self.db.Error as err:
             print err
             return False
-

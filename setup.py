@@ -1,21 +1,39 @@
-#**** warning this will erase your site if run*****
+#**** warning this will erase your database if run*****
+#
+#This script should be run once when starting
+#a new site to setup the database
+#
+#make the database "SITE" before running this
 
-from utilities import ospdb
+from utilities import sqldb
 import sys
 
-datab = ospdb('SITE')
+datab = sqldb('SITE')
+#datab.put_command('DELETE TABLE ARTICLES') #for testing
+#datab.put_command('DELETE TABLE SUBSECTIONS') #for testing
 
-datab.put_command('DROP TABLE PAGES')
-
-page_info = """
-CREATE TABLE IF NOT EXISTS PAGES (
-ID INTEGER PRIMARY KEY,
+table_info = """
+CREATE TABLE ARTICLES (
 TITLE TEXT,
 BODY TEXT,
+HTML TEXT,
 AUTHOR TEXT,
-DATE DATETIME)
+DATE DATETIME,
+SUBSECTION INTEGER)
 """
-if not datab.put_command(page_info):
-    print "problem with page_info"
+
+if not datab.put_command(table_info):
+    print "problem with setup"
+    sys.exit()
+
+table_info = """
+CREATE TABLE SUBSECTIONS (
+TITLE TEXT,
+BODY TEXT,
+HTML TEXT)
+"""
+
+if not datab.put_command(table_info):
+    print "problem with setup"
     sys.exit()
 
