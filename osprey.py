@@ -55,7 +55,7 @@ def index():
     if request.method == "POST":
         page_data['text'] = request.form['text']
         print page_data
-    return render_template('quilltest.html', image_dir=fake_dir)
+    return render_template('writepage.html', image_dir=fake_dir)
 
 def get_subsections():
     return []
