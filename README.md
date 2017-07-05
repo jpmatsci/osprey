@@ -1,39 +1,14 @@
-This is the Osprey webpage creator.
-Articles are made in using the webpage creator.
-Here is an example of a basic article.
+This is the osprey webpage app.
 
-\title{}
-\\this is a comment\\
-\\if nothing in the title bracked it takes it from the page title\\
-\paragraph{This is the first paragraph.  All this will be formated using
-paragraph tags.}
-\section{Section 2, 2}
-\paragraph{I also spoke about this in my other \link{page2,
-/page/page2}.  Here is a list of items \list{stuff, seperate by commas,
-item3, more stuff}.  This is the last sentence of this paragraph}
-\paragraph{Final paragraph.  \image{caption, images/image.jpg}  If no
-caption is listed then one wont be shown.}
+This is a project by Jason Puls for creating an app for a webpage of
+mine.  I know that there are a number of webpage sources like wordpress
+but I wanted to make one from scratch.  Initially I wrote a parser and
+my own custom markdown format but later switched to the quill text
+editor for writing custom pages.  The admininistration of the site was
+designed to allow anyone with or without programming knowledge to manage
+the site.
+The backend is written in python using the Flask framework.  OpenSql is
+used for the database.
 
-So here is a short list of items
-
-\title{title if different from page title}
-
-\paragraph{content}
-
-\section{section title, 2}
-
-\link{word,href}
-
-\list{x,y,z}
-
-\image{caption, file}
-
-\image{, file}      #for no caption
-
-\\captions are not parsed into the html\\
-
-the number in section is used for the header number i.e.
-\section{section, 3} is "<h3>section</h3>"
-\title{} is always "<h1></h1>"
-all <, > or \ at parsing not used in code will produce an error.
-
+For setting up run setup.py and it will create the necessary tables for
+the database.

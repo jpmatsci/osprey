@@ -17,6 +17,7 @@ from functools import wraps
 from utilites import dotdict
 from utilites import ospdb
 import os
+from os import listdir
 
 app = Flask(__name__)
 #this will be changed before going live **********************
@@ -47,16 +48,14 @@ def logout():
 
 @app.route('/', methods = ['GET', 'POST'])
 def index():
+    fake_dir = listdir('static/images/')
     page_data = dotdict({})
     page_data['subs'] = get_subsections()
     page_data['articles'] = get_articles()
     if request.method == "POST":
         page_data['text'] = request.form['text']
-        data = json.loads(page_data['text'])
-        for item in data['ops']:
-            print item
-    #return render_template('text.html', page_data=page_data)
-    return render_template('quilltest.html')
+        print page_data
+    return render_template('quilltest.html', image_dir=fake_dir)
 
 def get_subsections():
     return []

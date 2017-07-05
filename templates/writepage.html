@@ -1,0 +1,89 @@
+<!-- Include stylesheet -->
+<link href="https://cdn.quilljs.com/1.2.6/quill.snow.css" rel="stylesheet">
+
+<!-- Create the editor container -->
+<form method='POST' action='/' id='quillform'>
+    <div id="editor" style="width:75%">
+        <p>Some initial text</p>
+    </div>
+    <input type='hidden' id='hidden' name='text' value=''>
+</form>
+<button name='save' onclick='submit()'>SAVE</button>
+<input type='hidden' id='file' name='text' value=''>
+<div id="dialog-form">
+    <form>
+        <label for="name">Select Image</label>
+        <select id='imfile'>
+            {% for file in image_dir %}
+                <option value="{{ file }}">{{ file }}</option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+<script src="https://cdn.quilljs.com/1.2.6/quill.js"></script>
+<script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery-ui/jquery-ui.js') }}"></script>
+<link href="{{ url_for('static', filename='js/jquery-ui/jquery-ui.css') }}" rel='stylesheet'></link>
+
+<script>
+function getImage() {
+    var defer = $.Deferred();
+    $("#dialog-form").dialog({
+        autoOpen: true,
+        close: function(){
+            $(this).dialog('destroy');
+        },
+        title: 'Pick Image',
+        buttons: {
+            "Ok": function() {
+                var file = $('#imfile').find(":selected").text();
+                defer.resolve('static/images/'.concat(file))
+                $(this).dialog("close");
+            },
+            "Cancel": function() {
+                defer.resolve(null)
+                $(this).dialog("close");
+            }
+        }
+    });
+    return defer.promise();
+}
+
+var toolbarOptions = { container: [
+  ['bold', 'italic', 'underline', 'strike'],
+  ['blockquote', 'code-block'],
+  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+  [{ 'script': 'sub'}, { 'script': 'super' }],
+  [{ 'indent': '-1'}, { 'indent': '+1' }],
+  [{ 'header': [1, 3, false] }],
+  ['link', 'image']],
+  handlers: { 'image': function(value) {
+  if (value) {
+    //var href = prompt('Enter the URL');
+    getImage().then(function (href){
+    if (href){
+        this.quill.format('image', href);
+    } else {
+    this.quill.format('image', false);
+    }
+    });
+    }
+}
+}
+}
+
+var quill = new Quill('#editor', {
+  modules: {
+      toolbar: toolbarOptions,
+  },
+  theme: 'snow'
+});
+
+function submit(){
+      var text = quill.root.innerHTML;
+      document.getElementById('hidden').value = text;
+      document.getElementById('quillform').submit();
+  }
+      
+</script>
