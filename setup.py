@@ -5,7 +5,7 @@
 #
 #make the database "SITE" before running this
 
-from utilities import sqldb
+from utilities import ospdb
 import sys
 
 datab = sqldb('SITE')
@@ -15,11 +15,8 @@ datab = sqldb('SITE')
 table_info = """
 CREATE TABLE ARTICLES (
 TITLE TEXT,
-BODY TEXT,
 HTML TEXT,
-AUTHOR TEXT,
-DATE DATETIME,
-SUBSECTION INTEGER)
+DATE DATETIME)
 """
 
 if not datab.put_command(table_info):
@@ -29,8 +26,8 @@ if not datab.put_command(table_info):
 table_info = """
 CREATE TABLE SUBSECTIONS (
 TITLE TEXT,
-BODY TEXT,
-HTML TEXT)
+HTML TEXT,
+DATE DATETIME)
 """
 
 if not datab.put_command(table_info):

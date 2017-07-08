@@ -18,9 +18,15 @@ from utilites import dotdict
 from utilites import ospdb
 import os
 from os import listdir
+import time
+
+db = ospdb('OSP')
 
 app = Flask(__name__)
 #this will be changed before going live **********************
+# add a parse section later for the secret key and the admin login
+# app.secret_key = parse_settings
+admin, pw = ('admin', '1234')
 app.secret_key = 'b=5TsfYH(2g{J:#'
 
 #login required wrapper
@@ -46,25 +52,71 @@ def logout():
     return redirect(url_for('login'))
 
 
+@app.route('/login', methods = ['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        #wait 5 sec on all login requests
+        time.sleep(5000)
+        admin = request.form('username')
+        pw = reuqest.form('password')
+        if admin == uname and pw == admin_pw:
+           session['username'] = uname
+           redirect(url_for('administration'))
+        else:
+            flash('Invalid Credentials')
+    return render_template('login.html')
+
+@login_required
+@app.route('/administration'):
+def administration();
+    articles = []
+    article_iterator = iter_query('SELECT TITLE FROM ARTICLES')
+    for article in article_iterator:
+        articles.append(article)
+    subsections = []
+    subsection_iterator = iter_query('SELECT TITLE FROM SUBSECTIONS')
+    for subsection in subsection_iterator:
+        subsections.append(subsection)
+    if request.method == 'POST':
+        request.form('type')
+        request.title('title')
+        if ptype == 'subsection':
+            if title in subsections
+                flash('Title already in use')
+                return url_for('administration')
+        if ptype == 'article':
+            if title in articles:
+                flash('Title already in use')
+                return url_for('administration')
+    return render_template('admin.html', articles=articles, subsections=subsections)
+
 @app.route('/', methods = ['GET', 'POST'])
 def index():
-    fake_dir = listdir('static/images/')
     page_data = dotdict({})
+#remove next line after testing
+    image_dir = listdir('static/images/')
+#next get subsections and most recent articles
     page_data['subs'] = get_subsections()
-    page_data['articles'] = get_articles()
+    page_data['recent'] = get_recent()
+#next two lines for testing
     if request.method == "POST":
         page_data['text'] = request.form['text']
-        print page_data
     return render_template('writepage.html', image_dir=fake_dir)
 
 def get_subsections():
-    return []
+    subs = []
+    sub_query = db.iter_query('SELECT TITLE FROM SUBSECTIONS')
+    for sub in sub_query:
+        subs.append(sub)
+    return subs
 
-def get_articles():
-    return []
+def get_recent():
+    articles = []
+    article_query = db.iter_query('SELECT TITLE FROM ARTICLES ORDER BY DATE DESC LIMIT 5')
+    for article in article_query:
+        articles.append(article)
+    return articles
 
-def get_toppage():
-    return []
 
 if __name__ == '__main__':
 	app.run(debug = True, host='localhost')
