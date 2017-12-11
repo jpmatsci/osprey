@@ -24,13 +24,17 @@ app = Flask(__name__)
 import sys, os
 wd = os.getcwd()+'/'
 dbstr = 'sqlite:///'+wd+'ospdb.db'
+engine = create_engine(dbstr, echo=True)
+articles = Table('articles', metadata, autoload=True)
 
 #Load development config and override config from an environment variable
 #if needed.  The silent=true ignores it if there is no file
 app.config.update(dict(
     DATABASE=dbstr,
     SECRET_KEY='developmentkey',
-    VERSION='dev'))
+    VERSION='dev'
+    ADMIN_USER = 'admin',
+    ADMIN_PASS = 'admin1234'))
 app.config.from_envvar('OSPCONFIG', silent=True)
 
 #login required wrapper
@@ -62,42 +66,27 @@ def login():
         sleep(5000)
         admin = request.form('username')
         pw = reuqest.form('password')
-        if admin == uname and pw == admin_pw:
-           session['username'] = uname
-           redirect(url_for('administration'))
+        if admin == app.ADMIN_USER and pw == app.ADMIN_PASS:
+           session['username'] = admin
+           redirect(url_for('admin'))
         else:
             flash('Invalid Credentials')
     return render_template('login.html')
 
 @login_required
 @app.route('/admin')
-#Notes:  This is the upper level of admin
-#   Here you display sections and can make new secions
-def administration():
+#Notes: This the the admin for the home page 
+def admin():
     print "start of admin"
     if request.method == 'POST':
         sec_type = request.form('type')
         title = request.title('title')
         if stitle in sections:
             flash('Section already exists')
-            return url_for('administration')
+            return url_for('admin')
         else:
             create_section(title=title, sec_type=sec_type)
     return render_template('admin.html', sections=sections)
-
-@login_required
-@app.route('/admin/<section>')
-#Notes: This is where you view, create, and delete articles for this section
-def section_admin(section):
-    print "admin of section %s" % section
-    if request.method == 'POST':
-        request.title('title')
-        if title in articles:
-            flash('Title already in use')
-            return url_for('section_admin', section=section)
-        else:
-            create_article(title=title, section=section)
-    return render_template('section_admin.html', articles=articles, section=section)
 
 @login_required
 @app.route('/admin/<article>')
@@ -113,32 +102,33 @@ def section_admin(article):
 @app.route('/')
 def home():
     recent_articles = get_recent_articles()
-    sections = get_sections()
-    return render_template('top_page.html', recent_articles=recent_articles)
+    sub_articles = get_sub_articles()
+    return render_template('top_page.html', recent_articles=recent_articles, sub_articles=sub_articles)
 
-@app.route('/<section>')
-def section(section, start=0):
-    articles = get_section_articles(start)
-    return render_template('section.html', articles=articles)
-
-@app.route('/<section>/<article>')
-def article(section, article):
+@app.route('/<article>')
+def article(article):
     article_content = get_article_content(article)
+    sub_articles = get_sub_articles()
     return render_template('article.html', article_content=article_content)
 
+#TODO!
 def save_article(article_dict):
     return 0
 
-def get_section_articles(section):
-    return 0
-
-def get_sections():
-    return 0
+def get_sub_articles(parentid):
+    subs = []
+    temp = articles.select(articles.c.parentid == parentid).execute()
+    for row in temp:
+        subs.append(row)
+    return subs
 
 def create_article(title, section):
     return 0
 
 def save_article():
+    return 0
+
+def get_article_content(article):
     return 0
 
 if __name__ == '__main__':

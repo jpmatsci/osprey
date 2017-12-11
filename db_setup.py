@@ -1,5 +1,4 @@
 #This is the osprey database setup script
-#all it does is make 2 tables in sqlite3
 #the database goes into the folder
 #the script is run in
 
@@ -14,19 +13,14 @@ from sqlalchemy import Table, Column, Date, Integer, String, MetaData, ForeignKe
 engine = create_engine(dbstr, echo=True)
 metadata = MetaData()
 
+#add auto increment to id below!!!!
 articles = Table("articles", metadata,
 Column('id', Integer, primary_key=True),
-Column('date',Date),
+Column('date',Date),    #this will be the creation date
 Column('title', String),
-Column('content', String),
-Column('sectionid', Integer),
-)
-
-sections = Table("sections", metadata,
-Column('id', Integer, primary_key=True),
-Column('title', String),
-Column('content', String),
-Column('type', String),
+Column('description', String),  #This will be a short description for its parent to show
+Column('content', String),  #the html for the page will be saved here
+Column('parentid', Integer),
 )
 
 metadata.create_all(engine)
